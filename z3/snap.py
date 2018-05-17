@@ -1,5 +1,4 @@
 from __future__ import print_function
-
 import argparse
 import functools
 import logging
@@ -15,13 +14,7 @@ from z3.config import get_config
 
 def ValidateCipher(cipher):
     # See if the given cipher is vaid.
-    if not cipher:
-        return True
-    try:
-        ciphers = subprocess.check_output(["openssl", "list-cipher-commands"]).split()
-        return cipher in ciphers
-    except subprocess.CalledProcessError:
-        return False
+    return True
 
 def cached(func):
     @functools.wraps(func)
@@ -44,6 +37,12 @@ COMPRESSORS = {
     'pigz4': {
         'compress': 'pigz -4 --blocksize 4096',
         'decompress': 'pigz -d'},
+    'pigz9': {
+        'compress': 'pigz -9 --blocksize 4096',
+        'decompress': 'pigz -d'},
+    'xz3': {
+        'compress': 'xz -3 -T 4',
+        'decompress': 'xz -d'},
 }
 
 
@@ -380,8 +379,8 @@ class PairManager(object):
                 capture=True))
         self._cmd.pipe(
             "zfs send '{}'".format(z_snap.name),
-            self._encrypt(
-                self._compress(
+            self._compress(
+                self._encrypt(
                     self._pput_cmd(
                         estimated=estimated_size,
                         s3_prefix=self.s3_manager.s3_prefix,
@@ -463,8 +462,8 @@ class PairManager(object):
             self._cmd.pipe(
                 "z3_get {}".format(
                     os.path.join(self.s3_manager.s3_prefix, s3_snap.name)),
-                self._decompress(
-                    self._decrypt(
+                self._decrypt(
+                    self._decompress(
                         cmd="zfs recv {force}{snap}".format(
                             force=force, snap=s3_snap.name),
                         ),
