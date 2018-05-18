@@ -278,7 +278,7 @@ class CommandExecutor(object):
     def pipe(self, cmd1, cmd2, quiet=False, estimated_size=None, **kwa):
         """Executes commands"""
         if self.has_pv and not quiet:
-            pv = "pv" if estimated_size is None else "pv --size {}".format(estimated_size)
+            pv = "pv -i 10" if estimated_size is None else "pv -i 10  --size {}".format(estimated_size)
             return self.shell("{} | {}| {}".format(cmd1, pv, cmd2), **kwa)
         else:
             return self.shell("{} | {}".format(cmd1, cmd2), **kwa)
