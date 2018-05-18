@@ -41,7 +41,10 @@ COMPRESSORS = {
         'compress': 'pigz -9 --blocksize 4096',
         'decompress': 'pigz -d'},
     'xz3': {
-        'compress': 'xz -3 -T 4',
+        'compress': 'xz -3 -T 4 -v',
+        'decompress': 'xz -d'},
+    'xz4': {
+        'compress': 'xz -4 -T 4 -v',
         'decompress': 'xz -d'},
 }
 
