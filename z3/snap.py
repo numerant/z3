@@ -426,8 +426,8 @@ class PairManager(object):
             self._cmd.pipe(
                 "zfs send -i '{}' '{}'".format(
                     z_snap.parent.name, z_snap.name),
-                self._encrypt(
-                    self._compress(
+                self._compress(
+                    self._encrypt(
                         self._pput_cmd(
                             estimated=estimated_size,
                             parent=z_snap.parent.name,
